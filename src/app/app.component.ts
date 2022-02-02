@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
   onCreatePost(postData: { title: string; content: string }) {
     // Send Http request
     this.postService.createAndStorePosts(postData.title,postData.content);
+    this.loadedPosts.push(postData);
   }
 
   onFetchPosts() {
@@ -40,6 +41,9 @@ export class AppComponent implements OnInit {
 
   onClearPosts() {
     // Send Http request
+    this.postService.clearPosts().subscribe(()=>{
+      this.loadedPosts=[];
+    });
   }
 
 
