@@ -8,7 +8,7 @@ import { Post } from './post.model';
 })
 export class PostsService {
 
-  isFetching=false;
+  
   constructor(private http:HttpClient) { }
 
   createAndStorePosts(title:string, content:string){
@@ -20,9 +20,9 @@ export class PostsService {
     });
     console.log(postData);
   }
-
+  
   fetchPosts(){
-    this.isFetching=true;
+    
     this.http.get<{[key:string]:Post}>('https://ng-complete-guide-e6189-default-rtdb.firebaseio.com/posts.json')
     .pipe(map(responseData=>{
       const postsArray:Post[]=[];
