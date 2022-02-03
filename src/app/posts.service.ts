@@ -1,14 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Post } from './post.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PostsService {
+export class PostsService  {
 
-  
+  error=new Subject<string>();
+
   constructor(private http:HttpClient) { }
 
   createAndStorePosts(title:string, content:string){
@@ -17,6 +19,9 @@ export class PostsService {
     .post<{name:string}>('https://ng-complete-guide-e6189-default-rtdb.firebaseio.com/posts.json', postData)
     .subscribe(responseData=>{
       console.log(responseData);
+    }, error=>{
+      this.error.next(error.message);
+      
     });
     console.log(postData);
   }
@@ -43,4 +48,6 @@ export class PostsService {
 
     return this.http.delete('https://ng-complete-guide-e6189-default-rtdb.firebaseio.com/posts.json');
   }
+
+ 
 }
