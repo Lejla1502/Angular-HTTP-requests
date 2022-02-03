@@ -60,8 +60,9 @@ export class PostsService  {
   {
 
     return this.http.delete('https://ng-complete-guide-e6189-default-rtdb.firebaseio.com/posts.json',{
-      observe:'events'
-    }).pipe(
+      observe:'events',
+      responseType:'text'
+    }).pipe( 
       tap(event=>{
         console.log(event);
         if(event.type===HttpEventType.Sent){
