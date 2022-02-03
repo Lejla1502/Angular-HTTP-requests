@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { Subject, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Subject, Subscription, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { Post } from './post.model';
 
 @Injectable({
@@ -39,6 +39,9 @@ export class PostsService  {
       }
 
       return postsArray;
+    }),
+    catchError(errorRes=>{
+      return throwError(errorRes);
     })
     );
   }
