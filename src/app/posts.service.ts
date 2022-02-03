@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpEventType, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { Subject, Subscription, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { Post } from './post.model';
 
 @Injectable({
@@ -16,7 +16,10 @@ export class PostsService  {
   createAndStorePosts(title:string, content:string){
     const postData:Post={title:title, content:content};
     this.http
-    .post<{name:string}>('https://ng-complete-guide-e6189-default-rtdb.firebaseio.com/posts.json', postData)
+    .post<{name:string}>('https://ng-complete-guide-e6189-default-rtdb.firebaseio.com/posts.json', postData,
+    {
+      observe:'response'
+    })
     .subscribe(responseData=>{
       console.log(responseData);
     }, error=>{
@@ -56,7 +59,19 @@ export class PostsService  {
   clearPosts()
   {
 
-    return this.http.delete('https://ng-complete-guide-e6189-default-rtdb.firebaseio.com/posts.json');
+    return this.http.delete('https://ng-complete-guide-e6189-default-rtdb.firebaseio.com/posts.json',{
+      observe:'events'
+    }).pipe(
+      tap(event=>{
+        console.log(event);
+        if(event.type===HttpEventType.Sent){
+          //..
+        }
+        if(event.type===HttpEventType.Response){
+          console.log(event.body);
+        } 
+      })
+    );
   }
 
  
