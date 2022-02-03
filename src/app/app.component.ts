@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
+export class AppComponent implements OnInit, OnDestroy {
   loadedPosts:Post[] = [];
   isFetching=false;
   error=null;
@@ -24,6 +24,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     this.errorSub=this.postService.error.subscribe(
       errorMessage=>{
         this.error=errorMessage;
+        
       }
     );
     
@@ -36,15 +37,7 @@ export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  ngAfterViewInit()
-  {
-    this.errorSub=this.postService.error.subscribe(
-      errorMessage=>{
-        this.error=errorMessage;
-        console.log("Done");
-      }
-    );
-  }
+
 
   onCreatePost(postData: { title: string; content: string }) {
     // Send Http request
