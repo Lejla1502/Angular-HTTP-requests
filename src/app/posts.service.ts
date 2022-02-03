@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable, OnDestroy, OnInit } from '@angular/core';
 import { Subject, Subscription, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -27,11 +27,14 @@ export class PostsService  {
   }
   
   fetchPosts(){
-    
+    let searchParams=new HttpParams();
+    searchParams=searchParams.append('print','pretty');
+    searchParams=searchParams.append('custom','key');
     return this.http.get<{[key:string]:Post}>(
       'https://ng-complete-guide-e6189-default-rtdb.firebaseio.com/posts.json',
       {
-        headers: new HttpHeaders({'Custom-header':'Hello'})
+        headers: new HttpHeaders({'Custom-header':'Hello'}),
+        params: searchParams //new HttpParams().set('print', 'pretty') - for a single param
       })
     .pipe(map(responseData=>{
       const postsArray:Post[]=[];
@@ -41,7 +44,7 @@ export class PostsService  {
           postsArray.push({...responseData[key], id:key})
         }
       }
-
+  
       return postsArray;
     }),
     catchError(errorRes=>{
