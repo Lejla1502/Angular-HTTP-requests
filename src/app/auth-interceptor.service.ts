@@ -1,5 +1,6 @@
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
+import { HttpEvent, HttpEventType, HttpHandler, HttpInterceptor, HttpRequest } from "@angular/common/http";
 import { Observable } from "rxjs";
+import { tap } from "rxjs/operators";
 
 export class AuthInterceptorService implements HttpInterceptor{
     intercept(req: HttpRequest<any>, next: HttpHandler) {
@@ -11,9 +12,19 @@ export class AuthInterceptorService implements HttpInterceptor{
                                                     //but will be created for each and every request
         });
 
-       return next.handle(modifiedReq); //we let the request to continue and 
+      // return next.handle(modifiedReq); //we let the request to continue and 
        //we should actually return the result to really let it continue
        //if we don't return it and pass the request then the reuest will not continue and therefore the app will break
+
+
+       return next.handle(modifiedReq).pipe(tap(event=>{
+           console.log(event);
+           if(event.type===HttpEventType.Response)
+           {
+               console.log("response arrived, body data:");
+               console.log(event.body);
+           }
+       }));
     }
 
 }  
