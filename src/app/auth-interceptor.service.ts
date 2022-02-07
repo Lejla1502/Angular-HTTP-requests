@@ -17,14 +17,7 @@ export class AuthInterceptorService implements HttpInterceptor{
        //if we don't return it and pass the request then the reuest will not continue and therefore the app will break
 
 
-       return next.handle(modifiedReq).pipe(tap(event=>{
-           console.log(event);
-           if(event.type===HttpEventType.Response)
-           {
-               console.log("response arrived, body data:");
-               console.log(event.body);
-           }
-       }));
+       return next.handle(modifiedReq);
     }
 
 }  
